@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest ApplicationTypeName="GameStoreType"
+                     ApplicationTypeVersion="1.0.0"
+                     xmlns="http://schemas.microsoft.com/2011/01/fabric"
+                     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Parameters>
+    <Parameter Name="GameStore_Container_InstanceCount" DefaultValue="-1" />
+  </Parameters>
+  <!-- Импортируйте ServiceManifest из ServicePackage. Значения ServiceManifestName и ServiceManifestVersion 
+       должны совпадать с атрибутами Name и Version элемента ServiceManifest, определенного в 
+       файле ServiceManifest.xml. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="GameStore_ContainerPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+    <Policies>
+      <ContainerHostPolicies CodePackageRef="Code">
+        <!-- See https://aka.ms/I7z0p9 for how to encrypt your repository password -->
+        <RepositoryCredentials AccountName="sioffo" Password="sioffo123" PasswordEncrypted="true" />
+        <PortBinding ContainerPort="80" EndpointRef="GameStore_ContainerTypeEndpoint" />
+      </ContainerHostPolicies>
+    </Policies>
+  </ServiceManifestImport>
+  <DefaultServices>
+    <!-- Приведенный ниже раздел создает экземпляры типов служб при создании экземпляра этого 
+         типа приложения. Кроме того, вы можете создать один экземпляр типа службы или несколько с помощью 
+         модуля ServiceFabric PowerShell.
+         
+         Приведенное ниже значение атрибута ServiceTypeName должно совпадать с именем, определенным в импортированном файле ServiceManifest.xml. -->
+    <Service Name="GameStore_Container" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="GameStore_ContainerType" InstanceCount="[GameStore_Container_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+  </DefaultServices>
+</ApplicationManifest>

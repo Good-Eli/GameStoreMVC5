@@ -1,0 +1,66 @@
+﻿@using System.Runtime.InteropServices
+@using System.IO
+@using System.Diagnostics
+@{
+    var process = Process.GetCurrentProcess();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/ErrorStyles.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+    <style>
+        .navbar-right {
+            float: right !important;
+            margin-right: 15px;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse" role="navigation">
+        <a class="navbar-brand" href="#">
+            <span class="hidden-xs">GameStore - магазин компьютерных игр</span>
+            <div class="visible-xs">Game</div>
+            <div class="visible-xs">Store</div>
+        </a>
+        @Html.Action("Summary", "Cart")
+    </div>
+    <div class="visible-xs">
+        @Html.Action("Menu", "Nav", new { horizontalNav = true })
+    </div>
+    <div class="row panel">
+        <div id="categories" class="col-sm-3 hidden-xs">
+            @Html.Action("Menu", "Nav")
+            <h5 class="text-center" style="margin-top: 200px;">Метрика</h5>
+            <table width="90%" align="center" class="table-striped table-hover">
+                <tr>
+                    <td>Контейнерный</td>
+                    <td>@(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") is object ? "true" : "false")</td>
+                </tr>
+                <tr>
+                    <td>CPU ядра</td>
+                    <td>@Environment.ProcessorCount</td>
+                </tr>
+                <tr>
+                    <td>Память, текущее использование (bytes)</td>
+                    <td>@process.WorkingSet64</td>
+                </tr>
+                <tr>
+                    <td>Память, макс. доступная (bytes)</td>
+                    <td>@process.MaxWorkingSet</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-12 col-sm-8">
+            @RenderBody()
+        </div>
+    </div>
+    <center><table border="1" bordercolor="red" cellpadding="10"><tr><td><a href="/Admin/Index">Вход для администраторов</a><br><center>Lykov # 2020</center></td></tr></table></center>
+</body>
+</html>
